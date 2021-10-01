@@ -89,19 +89,6 @@ public class FileManager {
                 + model.getInameLine() + "'>";
     }
 
-    private String strHTMLScopingPanel() {
-        String str = "<tr><td colspan='2' style='text-align: center;' >";
-        str += "Show: ";
-
-        for (int i = 0; i < ApexDoc.rgstrScope.length; i++) {
-            str += "<input type='checkbox' checked='checked' id='cbx" + ApexDoc.rgstrScope[i] +
-                    "' onclick='ToggleScope(\"" + ApexDoc.rgstrScope[i] + "\", this.checked );'>" +
-                    ApexDoc.rgstrScope[i] + "</input>&nbsp;&nbsp;";
-        }
-        str += "</td></tr>";
-        return str;
-    }
-
     /********************************************************************************************
      * @description main routine that creates an HTML file for each class specified
      * @param mapGroupNameToClassGroup
@@ -111,21 +98,7 @@ public class FileManager {
      * @param hostedSourceURL
      * @param monitor
      */
-    private void makeFile(TreeMap<String, ClassGroup> mapGroupNameToClassGroup, ArrayList<ClassModel> cModels,
-            String projectDetail, String homeContents, String hostedSourceURL, IProgressMonitor monitor) {
-        String links = "<table width='100%'>";
-        links += strHTMLScopingPanel();
-        links += "<tr style='vertical-align:top;' >";
-        links += getPageLinks(mapGroupNameToClassGroup, cModels);
-
-        if (homeContents != null && homeContents.trim().length() > 0) {
-            homeContents = links + "<td class='contentTD'>" + "<h2 class='section-title'>Home</h2>" + homeContents + "</td>";
-            homeContents = Constants.getHeader(projectDetail) + homeContents + Constants.FOOTER;
-        } else {
-            homeContents = Constants.DEFAULT_HOME_CONTENTS;
-            homeContents = links + "<td class='contentTD'>" + "<h2 class='section-title'>Home</h2>" + homeContents + "</td>";
-            homeContents = Constants.getHeader(projectDetail) + homeContents + Constants.FOOTER;
-        }
+    private void makeFile(TreeMap<String, ClassGroup> mapGroupNameToClassGroup, ArrayList<ClassModel> cModels,  String projectDetail, String homeContents, String hostedSourceURL, IProgressMonitor monitor) {
 
         String fileName = "";
         TreeMap<String, String> mapFNameToContent = new TreeMap<String, String>();
