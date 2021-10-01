@@ -40,7 +40,8 @@ public class MethodModel extends ApexModel {
             int lastindex = nameLine.indexOf("(");
             if (lastindex >= 0) {
                 String methodName = ApexDoc.strPrevWord(nameLine, lastindex);
-                return methodName;
+                
+                return methodName == null ? "" : methodName;
             }
         }
         return "";

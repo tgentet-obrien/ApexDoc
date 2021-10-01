@@ -20,7 +20,6 @@ public class Constants {
         "<center style='font-size:.8em;'><a href='http://github.com/SalesforceFoundation/ApexDoc' target='_blank'>Powered By ApexDoc</a>" + 
         "</center></body></html>";
     
-    public static final String ROOT_DIRECTORY = "ApexDocumentation";
     public static final String DEFAULT_HOME_CONTENTS = "<h1>Project Home</h2>";
     public static final String PROJECT_DETAIL = 
         "<div class='topsection'>" +

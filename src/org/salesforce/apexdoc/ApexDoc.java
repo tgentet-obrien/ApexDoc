@@ -27,6 +27,7 @@ public class ApexDoc {
             PrintStream ps = new PrintStream(fos);
             System.setOut(ps);
         } catch (Exception ex) {
+            System.out.println("Error: " + ex.getMessage());
         }
     }
 
@@ -52,7 +53,7 @@ public class ApexDoc {
     // Eclipse PlugIn invocation
     public static void RunApexDoc(String[] args, IProgressMonitor monitor) {
         String sourceDirectory = "";
-        String targetDirectory = "";
+        String targetDirectory = "ApexDocumentation";
         String homefilepath = "";
         String authorfilepath = "";
         String hostedSourceURL = "";

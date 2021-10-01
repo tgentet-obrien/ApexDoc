@@ -52,12 +52,6 @@ public class FileManager {
 
     private boolean createHTML(TreeMap<String, String> mapFNameToContent, IProgressMonitor monitor) {
         try {
-            if (path.endsWith("/") || path.endsWith("\\")) {
-                path += Constants.ROOT_DIRECTORY; // + "/" + fileName + ".html";
-            } else {
-                path += "/" + Constants.ROOT_DIRECTORY; // + "/" + fileName + ".html";
-            }
-
             (new File(path)).mkdirs();
 
             for (String fileName : mapFNameToContent.keySet()) {
@@ -99,7 +93,7 @@ public class FileManager {
      * @param monitor
      */
     private void makeFile(TreeMap<String, ClassGroup> mapGroupNameToClassGroup, ArrayList<ClassModel> cModels,  String projectDetail, String homeContents, String hostedSourceURL, IProgressMonitor monitor) {
-
+        String links = "";
         String fileName = "";
         TreeMap<String, String> mapFNameToContent = new TreeMap<String, String>();
         mapFNameToContent.put("index", homeContents);
@@ -125,8 +119,7 @@ public class FileManager {
                 continue;
             }
             contents += "</div>";
-
-            contents = Constants.getHeader(projectDetail) + contents + Constants.FOOTER;
+            
             mapFNameToContent.put(fileName, contents);
             if (monitor != null)
                 monitor.worked(1);
@@ -275,7 +268,7 @@ public class FileManager {
             ClassGroup cg = mapGroupNameToClassGroup.get(strGroup);
             if (cg.getContentSource() != null) {
                 String cgContent = parseHTMLFile(cg.getContentSource());
-                if (cgContent != "") {
+                if (!cgContent.equals("")) {
                     String strHtml = Constants.getHeader(projectDetail) + links + "<td class='contentTD'>" +
                             "<h2 class='section-title'>" +
                             escapeHTML(cg.getName()) + "</h2>" + cgContent + "</td>";
@@ -287,73 +280,7 @@ public class FileManager {
             }
         }
     }
-
-    /**********************************************************************************************************
-     * @description generate the HTML string for the Class Menu to display on
-     *              each page.
-     * @param mapGroupNameToClassGroup
-     *            map that holds all the Class names, and their respective Class
-     *            Group.
-     * @param cModels
-     *            list of ClassModels
-     * @return String of HTML
-     */
-    private String getPageLinks(TreeMap<String, ClassGroup> mapGroupNameToClassGroup, ArrayList<ClassModel> cModels) {
-        boolean createMiscellaneousGroup = false;
-
-        // this is the only place we need the list of class models sorted by name.
-        TreeMap<String, ClassModel> tm = new TreeMap<String, ClassModel>();
-        for (ClassModel cm : cModels) {
-            tm.put(cm.getClassName().toLowerCase(), cm);
-            if (!createMiscellaneousGroup && cm.getClassGroup() == null)
-                createMiscellaneousGroup = true;
-        }
-        cModels = new ArrayList<ClassModel>(tm.values());
-
-        String links = "<td width='20%' vertical-align='top' >";
-        links += "<div class='sidebar'><div class='navbar'><nav role='navigation'><ul id='mynavbar'>";
-        links += "<li id='idMenuindex'><a href='.' onclick=\"gotomenu('index.html', event);return false;\" class='nav-item'>Home</a></li>";
-
-        // add a bucket ClassGroup for all Classes without a ClassGroup specified
-        if (createMiscellaneousGroup)
-            mapGroupNameToClassGroup.put("Miscellaneous", new ClassGroup("Miscellaneous", null));
-
-        // create a sorted list of ClassGroups
-
-        for (String strGroup : mapGroupNameToClassGroup.keySet()) {
-            ClassGroup cg = mapGroupNameToClassGroup.get(strGroup);
-            String strGoTo = "onclick=\"gotomenu(document.location.href, event);return false;\"";
-            if (cg.getContentFilename() != null)
-                strGoTo = "onclick=\"gotomenu('" + cg.getContentFilename() + ".html" + "', event);return false;\"";
-            links += "<li class='header' id='idMenu" + cg.getContentFilename() +
-                    "'><a class='nav-item nav-section-title' href='.' " +
-                    strGoTo + " class='nav-item'>" + strGroup + "<span class='caret'></span></a></li>";
-            links += "<ul>";
-
-            // even though this algorithm is O(n^2), it was timed at just 12
-            // milliseconds, so not an issue!
-            for (ClassModel cModel : cModels) {
-                if (strGroup.equals(cModel.getClassGroup())
-                        || (cModel.getClassGroup() == null && strGroup == "Miscellaneous")) {
-                    if (cModel.getNameLine() != null && cModel.getNameLine().trim().length() > 0) {
-                        String fileName = cModel.getClassName();
-                        links += "<li class='subitem classscope" + cModel.getScope() + "' id='idMenu" + fileName +
-                                "'><a href='.' onclick=\"gotomenu('" + fileName + ".html', event);return false;\" class='nav-item sub-nav-item scope" +
-                                cModel.getScope() + "'>" +
-                                fileName + "</a></li>";
-                    }
-                }
-            }
-
-            links += "</ul>";
-        }
-
-        links += "</ul></nav></div></div></div>";
-
-        links += "</td>";
-        return links;
-    }
-
+    
     private void docopy(String source, String target) throws Exception {
 
         InputStream is = this.getClass().getResourceAsStream(source);
